@@ -6,5 +6,5 @@ exports.ok = function(values, res){
         'values' : values
     };
      res.json(data);
-     res.send();
+     res.end();
 }
