@@ -51,3 +51,39 @@ exports.createKategori = function (req, res) {
     }
   );
 };
+
+//menubah data kategori
+exports.editKategori = function (req, res) {
+  var id = req.body.id;
+  var kategori = req.body.kategori;
+
+  connection.query(
+    "UPDATE kategori set nama_kategori=? WHERE id_kategori=?",
+    [kategori,id],
+    function (error, rows, fields) {
+      if (error) {
+        console.log(error);
+      } else {
+        response.ok("Berhasil merubah kategori", res);
+      }
+    }
+  );
+};
+
+//menghapus data kategori
+exports.deleteKategori = function (req, res) {
+  var id = req.body.id;
+  var kategori = req.body.kategori;
+
+  connection.query(
+    "DELETE FROM kategori WHERE id_kategori=?",
+    [id],
+    function (error, rows, fields) {
+      if (error) {
+        console.log(error);
+      } else {
+        response.ok("Berhasil menghapus kategori", res);
+      }
+    }
+  );
+};
