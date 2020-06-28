@@ -1,0 +1,24 @@
+{
+  "name": "serverapi",
+  "version": "1.0.0",
+  "description": "Aplikasi res api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saelani/serverapi.git"
+  },
+  "keywords": [
+    "res",
+    "api",
+    "nodejs"
+  ],
+  "author": "saelani",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saelani/serverapi/issues"
+  },
+  "homepage": "https://github.com/saelani/serverapi#readme"
+}
