@@ -6,5 +6,7 @@ module.exports = function (app) {
   app.route("/").get(jsonku.index);
   app.route('/kategori').get(jsonku.getsKategori);
   app.route('/kategori/:id').get(jsonku.getKategori);
+  app.route('/kategori').post(jsonku.createKategori);
+
 
 };
