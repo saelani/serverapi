@@ -9,4 +9,7 @@ module.exports = function (app) {
   app.route('/kategori').post(jsonku.createKategori);
   app.route('/kategori').put(jsonku.editKategori);
   app.route('/kategori').delete(jsonku.deleteKategori);
+  //app.route('/tampilgroup').get(jsonku.getsGroupKategori);
+  app.route('/tampilmatakuliah')
+        .get(jsonku.tampilgroupmatakuliah);
 };

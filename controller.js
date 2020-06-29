@@ -59,7 +59,7 @@ exports.editKategori = function (req, res) {
 
   connection.query(
     "UPDATE kategori set nama_kategori=? WHERE id_kategori=?",
-    [kategori,id],
+    [kategori, id],
     function (error, rows, fields) {
       if (error) {
         console.log(error);
@@ -75,15 +75,43 @@ exports.deleteKategori = function (req, res) {
   var id = req.body.id;
   var kategori = req.body.kategori;
 
+  connection.query("DELETE FROM kategori WHERE id_kategori=?", [id], function (
+    error,
+    rows,
+    fields
+  ) {
+    if (error) {
+      console.log(error);
+    } else {
+      response.ok("Berhasil menghapus kategori", res);
+    }
+  });
+};
+
+//nested djson
+exports.getsGroupKategori = function (req, res) {
   connection.query(
-    "DELETE FROM kategori WHERE id_kategori=?",
-    [id],
+    "SELECT kategori.id_kategori, artikel.judul, artikel.penulis FROM kategori JOIN artikel WHERE artikel.id_kategori = kategori.id_kategori ORDER BY kategori.id_kategori",
     function (error, rows, fields) {
       if (error) {
         console.log(error);
       } else {
-        response.ok("Berhasil menghapus kategori", res);
+        response.oknested("Berhasil", res);
       }
     }
   );
 };
+
+//menampilkan matakuliah group
+exports.tampilgroupmatakuliah = function(req, res){
+  connection.query('SELECT mahasiswa.id_mahasiswa, mahasiswa.nim, mahasiswa.nama, mahasiswa.jurusan, matakuliah.matakuliah, matakuliah.sks from krs JOIN matakuliah JOIN mahasiswa WHERE krs.id_matakuliah = matakuliah.id_matakuliah AND krs.id_mahasiswa = mahasiswa.id_mahasiswa ORDER BY mahasiswa.id_mahasiswa',
+      function (error, rows, fields){
+          if(error){
+              console.log(error);
+          }else {
+              response.oknested(rows, res);
+          }
+      }
+  )
+
+}
