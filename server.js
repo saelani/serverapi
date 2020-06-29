@@ -20,6 +20,9 @@ app.use(bodyParser.json());
 var routes = require('./routes');
 routes(app);
 
+//daftarkan menu routes dari index
+app.use('/auth', require('./middleware'));
+
 /* catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
