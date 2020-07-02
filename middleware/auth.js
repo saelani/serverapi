@@ -1,50 +1,49 @@
-var connection = require("../koneksi");
-var mysql = require("mysql");
-var md5 = require("md5");
-var response = require("../res");
-var jwt = require("jsonwebtoken");
-var config = require("../config/secret");
-var ip = require("ip"); 
+var connection = require('../models/koneksi');
+var mysql = require('mysql');
+var md5 = require('md5');
+var response = require('../controllers/res');
+var jwt = require('jsonwebtoken');
+var config = require('../config/secret');
+var ip = require('ip');
 
 //controller untuk register
-exports.registrasi = function (req, res) {
-  var post = {
-    username: req.body.username,
-    email: req.body.email,
-    password: md5(req.body.password),
-    role: req.body.role,
-    tanggal_daftar: new Date(),
-  };
-
-  var query = "SELECT email FROM ?? WHERE ??=?";
-  var table = ["user", "email", post.email];
-
-  query = mysql.format(query, table);
-
-  connection.query(query, function (error, rows) {
-    if (error) {
-      console.log(error);
-    } else {
-      if (rows.length == 0) {
-        var query = "INSERT INTO ?? SET ?";
-        var table = ["user"];
-        query = mysql.format(query, table);
-        connection.query(query, post, function (error, rows) {
-          if (error) {
-            console.log(error);
-          } else {
-            response.ok("Berhasil menambahakan user", res);
-          }
-        });
-      } else {
-        response.ok("Email sudah ada",res);
-      }
+exports.registrasi = function(req,res) {
+    var post = {
+        username: req.body.username,
+        email: req.body.email,
+        password: md5(req.body.password),
+        role: req.body.role,
+        tanggal_daftar: new Date()
     }
-  });
-};
 
-//controlor login
+    var query = "SELECT email FROM ?? WHERE ??=?";
+    var table = ["user", "email", post.email];
 
+    query = mysql.format(query,table);
+
+    connection.query(query, function(error, rows) {
+        if(error){
+            console.log(error);
+        }else {
+            if(rows.length == 0){
+                var query = "INSERT INTO ?? SET ?";
+                var table = ["user"];
+                query = mysql.format(query, table);
+                connection.query(query, post, function(error, rows){
+                    if(error){
+                        console.log(error);
+                    }else {
+                        response.ok("Berhasil menambahkan data user baru", res);
+                    }
+                });
+            }else {
+                response.ok("Email sudah terdaftar!",res);
+            }
+        }
+    })
+}
+
+// controller untuk login
 exports.login = function(req,res){
     var post = {
         password: req.body.password,
@@ -55,15 +54,16 @@ exports.login = function(req,res){
     var table = ["user", "password", md5(post.password), "email", post.email];
 
     query = mysql.format(query,table);
-
-    connection.query(query, function(error,rows){
+    
+    connection.query(query, function(error, rows){
         if(error){
             console.log(error);
-        } else {
+        }else {
             if(rows.length == 1){
-                var token = jwt.sign({rows}, config.secret,{
+                var token = jwt.sign({rows}, config.secret, {
                     expiresIn: 1440
                 });
+
                 id_user = rows[0].id;
 
                 var data = {
@@ -75,22 +75,27 @@ exports.login = function(req,res){
                 var query = "INSERT INTO ?? SET ?";
                 var table = ["akses_token"];
 
-                query = mysql.format(query,table);
-                connection.query(query, data, function(error,rows){
+                query = mysql.format(query, table);
+                connection.query(query, data, function(error, rows){
                     if(error){
                         console.log(error);
-                    } else {
+                    }else {
                         res.json({
                             success: true,
-                            message: "token jwt sudah tergenerate",
-                            token: token,
+                            message:'Token JWT tergenerate!',
+                            token:token,
                             currUser: data.id_user
-                        })
+                        });
                     }
-                })
-
+                });
+            }
+            else {
+                res.json({"Error": true, "Message":"Email atau password salah!"});
             }
         }
-    })
+    });
+}
 
+exports.halamanrahasia = function(req,res){
+    response.ok("Halaman ini hanya untuk user dengan role = 2!",res);
 }
